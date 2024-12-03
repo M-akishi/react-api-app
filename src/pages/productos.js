@@ -1,25 +1,39 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import verdurasImg from '../img/verduras.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Spinner } from "react-bootstrap";
-
-const baseURL = "http://127.0.0.1:8000/api/productos";
+import { apiService } from "./apiServices";
 
 export const Productos = () => {
     const [productos, setProducts] = useState([]);
     const navigate = useNavigate();
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get(baseURL, {
-            headers: {
-                'Accept': 'application/json',
-            }
-        })
+        // Llamar a la API para obtener los productos
+        apiService
+            .getAll("productos")
             .then((response) => {
-                setProducts(response.data)
+                setProducts(response.data);
+                setError(null);
             })
-    }, [])
+            .catch((error) => {
+                if (error.code === "ERR_NETWORK") {
+                    setError("API está fuera de servicio. Por favor, intenta más tarde.");
+                } else {
+                    setError("Error al cargar los datos.");
+                    console.error(error);
+                }
+            });
+    }, []);
+
+    if (error) {
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+                <p className="text-danger">{error}</p>
+            </div>
+        );
+    }
 
     const handleUpdate = (id) => {
         navigate(`/producto/actualizar/${id}`)
@@ -132,20 +146,15 @@ export const NewProducto = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Aquí realizamos la solicitud POST para crear el producto
-        axios.post(baseURL, producto, {
-            headers: {
-                'Accept': 'application/json',
-            }
-        })
+        apiService
+            .create("productos", producto)
             .then(response => {
-                console.log('Producto agregado:', response.data);
-                // Aquí puedes redirigir o mostrar un mensaje de éxito
-                navigate('/productos');  // Redirige a la página de productos después de agregar
+                console.log(response)
+                navigate('/productos')
             })
-            .catch(error => {
-                console.error('Hubo un error al agregar el producto:', error);
-            });
+            .catch((error) => {
+                console.log(error)
+            })
     };
 
     // Función para manejar el botón de cancelar
@@ -238,19 +247,16 @@ export const ProductoActualizar = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Realizamos la solicitud PATCH para actualizar el producto
-        axios.patch(`${baseURL}/${id}`, producto, {
-            headers: {
-                'Accept': 'application/json',
-            },
-        })
+        apiService
+            .patch("productos", producto)
             .then(response => {
-                console.log('Producto actualizado:', response.data);
-                navigate('/productos');  // Redirige a la página de productos después de actualizar
+                console.log(response)
+                navigate('/productos')
             })
-            .catch(error => {
-                console.error('Hubo un error al actualizar el producto:', error);
-            });
+            .catch((error) => {
+                console.log(error)
+            })
+
     };
 
     // Maneja la cancelación y redirige a la lista de productos
@@ -260,18 +266,15 @@ export const ProductoActualizar = () => {
 
     useEffect(() => {
         if (id) { // Aseguramos que el id esté presente
-            axios.get(`${baseURL}/${id}`, {  // Solicitamos el producto con el id
-                headers: {
-                    'Accept': 'application/json',
-                },
-            })
-                .then((response) => {
-                    setProducto(response.data); // Guardamos los datos del producto
+
+            apiService
+                .getOne("productos", id)
+                .then(response => {
+                    setProducto(response.data)
                 })
                 .catch((error) => {
-                    console.error("Error al obtener el producto:", error);
-                    // Maneja el error aquí (opcional)
-                });
+                    console.log(error)
+                })
         }
     }, [id]); // Dependencia de id
 
@@ -358,33 +361,29 @@ export const ProductoEliminar = () => {
     // Efecto para obtener los datos del producto por ID
     useEffect(() => {
         if (id) {
-            axios
-                .get(`${baseURL}/${id}`, { // Solicita el producto con el id
-                    headers: {
-                        'Accept': 'application/json',
-                    },
-                })
-                .then((response) => {
-                    setProducto(response.data); // Guardamos los datos del producto
+            apiService
+                .getOne("productos", id)
+                .then(response => {
+                    setProducto(response.data)
                 })
                 .catch((error) => {
-                    console.error('Error al obtener el producto:', error);
-                });
+                    console.log(error)
+                })
         }
     }, [id]);
 
     // Función para confirmar la eliminación
     const confirmDelete = () => {
-        if (id) {
-            axios
-                .delete(`${baseURL}/${id}`) // Realiza la eliminación del producto
-                .then((response) => {
-                    console.log('Producto eliminado:', response.data);
-                    navigate('/productos'); // Redirige al listado de productos después de eliminar
-                })
-                .catch((error) => {
-                    console.error('Error al eliminar el producto:', error);
-                });
+        if (id) {            
+            apiService
+            .delete("productos",id)
+            .then(response => {
+                console.log(response.data)
+                navigate('/productos')
+            })
+            .catch((error) => {
+                console.log(error)
+            })
         }
     };
 
