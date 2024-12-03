@@ -248,7 +248,7 @@ export const ProductoActualizar = () => {
         e.preventDefault();
 
         apiService
-            .patch("productos", producto)
+            .update("productos", id ,producto)
             .then(response => {
                 console.log(response)
                 navigate('/productos')
