@@ -383,7 +383,62 @@ export const MesaActualizar = () => {
 }
 
 export const MesaEliminar = () => {
-    return(
-        <>workin</>
-    )
+    const { id } = useParams()
+    const [mesa, setMesa] = useState(null)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (id) {
+            apiService
+            .getOne('mesas', id)
+            .then(response => {
+                setMesa(response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        }
+    },[id])
+
+    const confirmDelete = () => {
+        if (id) {            
+            apiService
+            .delete("mesas",id)
+            .then(response => {
+                console.log(response.data)
+                navigate('/mesas')
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        }
+    };
+
+    if (!mesa) {
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+        );
+    }
+
+    return (
+        <div className="container">
+            <h1>Eliminar Mesa</h1>
+            <div className="alert alert-warning">
+                <h4>¿Estás seguro de que deseas eliminar esta Mesa?</h4>
+                <p><strong>ID:</strong> {mesa.id}</p>
+                <p><strong>Capacidad:</strong> {mesa.capacidad}</p>
+                <p><strong>Estado:</strong> {mesa.estado === 1 ? "Activo" : "Inactivo"}</p>
+            </div>
+            <div className="d-flex">
+                <button onClick={confirmDelete} className="btn btn-danger me-2">
+                    Eliminar
+                </button>
+                <button onClick={() => navigate('/mesas')} className="btn btn-secondary">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    );
 }

@@ -454,9 +454,9 @@ export const PlatoEliminar = () => {
 
     return (
         <div className="container">
-            <h1>Eliminar Producto</h1>
+            <h1>Eliminar Plato</h1>
             <div className="alert alert-warning">
-                <h4>¿Estás seguro de que deseas eliminar este producto?</h4>
+                <h4>¿Estás seguro de que deseas eliminar este plato?</h4>
                 <p><strong>Nombre:</strong> {plato.nombre}</p>
                 <p><strong>Fecha Uso:</strong> {plato.fecha}</p>
                 <p><strong>Cantidad:</strong> {plato.cantidad_disponibles}</p>
