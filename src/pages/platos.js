@@ -78,6 +78,7 @@ export const Platos = () => {
                             <h5 className="card-title">{plato.nombre}</h5>
                             <p className="card-text">Tipo: {plato.tipo}</p>
                             <p className="card-text">Cantidad disponibles: {plato.cantidad_disponibles}</p>
+                            <p className="card-text">Precio: ${plato.precio}</p>
                             <p className="card-text">
                                 <small className="text-body-secondary">
                                     Fecha De uso: {plato.fecha}
@@ -150,6 +151,7 @@ export const NewPlato = () => {
         tipo: '',
         fecha: '',
         cantidad_disponibles: '',
+        precio: ''
     })
     const [tipoPlatos, setTipoPlatos] = useState([])
 
@@ -237,13 +239,25 @@ export const NewPlato = () => {
                     />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="cantidad_disponibles" className="form-label">Cantidad</label>
+                    <label htmlFor="cantidad_disponibles" className="form-label">Cantidad disponibles</label>
                     <input
                         type="number"
                         className="form-control"
                         id="cantidad_disponibles"
                         name="cantidad_disponibles"
                         value={plato.cantidad_disponibles}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="precio" className="form-label">Precio</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        id="precio"
+                        name="precio"
+                        value={plato.precio}
                         onChange={handleChange}
                         required
                     />

@@ -11,9 +11,14 @@ const api = axios.create({
   },
 });
 
+// Función para construir la query string
+const buildQuery = (params) => {
+  return params ? `?${new URLSearchParams(params).toString()}` : "";
+};
+
 // Métodos CRUD encapsulados
 export const apiService = {
-  getAll: (resource) => api.get(`/api/${resource}`), // Obtiene todos los elementos
+  getAll: (resource, query = null) => api.get(`/api/${resource}${buildQuery(query)}`), // Obtiene todos los elementos
   getOne: (resource, id) => api.get(`/api/${resource}/${id}`), // Obtiene un elemento por ID
   create: (resource, data) => api.post(`/api/${resource}`, data), // Crea un nuevo elemento
   update: (resource, id, data) => api.patch(`/api/${resource}/${id}`, data), // Actualiza un elemento por ID

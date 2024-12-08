@@ -5,7 +5,8 @@ import NavBar from './pages/navBar';
 import { Productos, NewProducto, ProductoActualizar, ProductoEliminar } from './pages/productos';
 import { Platos, NewPlato, PlatoActualizar, PlatoEliminar, PlatoIngredientes } from './pages/platos';
 import { Mesas, NewMesa, MesaActualizar, MesaEliminar } from './pages/mesas';
-
+import { Pedidos, NewPedido, ActualizarPedido, EliminarPedido } from './pages/pedidos';
+import { Boletas, NewBoleta } from './pages/boletas';
 
 function App() {
   return (
@@ -26,6 +27,13 @@ function App() {
         <Route path='mesas/nuevo' element={<NewMesa/>} />
         <Route path='mesas/actualizar/:id' element={<MesaActualizar/>} />
         <Route path='mesas/eliminar/:id' element={<MesaEliminar/>} />
+        <Route path='pedidos' element={<Pedidos/>} />
+        <Route path='pedidos/nuevo' element={<NewPedido/>} />
+        <Route path='pedidos/actualizar/:id' element={<ActualizarPedido/>} />
+        <Route path='pedidos/eliminar/:id' element={<EliminarPedido/>} />
+        <Route path='boletas' element={<Boletas/>} />
+        <Route path='boletas/nuevo' element={<NewBoleta/>} />
+
       </Routes>
     </BrowserRouter>
   );
