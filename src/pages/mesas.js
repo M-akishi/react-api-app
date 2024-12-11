@@ -51,6 +51,10 @@ export const Mesas = () => {
         navigate(`/mesas/eliminar/${id}`)
     };
 
+    const handlePedidos = (id) => {
+        navigate(`/pedidos/${id}`)
+    };
+
     const MesaCard = ({ mesa }) => {
         return (
             <div className="card mb-3" style={{ height: 'auto' }}>
@@ -94,7 +98,7 @@ export const Mesas = () => {
                     <div className="col-12 ms-auto col-md-2 p-2 d-flex flex-column align-items-center justify-content-center">
                         <button
                             type="button"
-                            className="btn btn-warning m-2"
+                            className="btn btn-warning"
                             onClick={() => handleUpdate(mesa.id)}
                             style={{ width: '100%' }}
                         >
@@ -102,11 +106,19 @@ export const Mesas = () => {
                         </button>
                         <button
                             type="button"
-                            className="btn btn-danger"
+                            className="btn btn-danger m-2"
                             onClick={() => handleDelete(mesa.id)}
                             style={{ width: '100%' }}
                         >
                             Eliminar
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-success"
+                            onClick={() => handlePedidos(mesa.id)}
+                            style={{ width: '100%' }}
+                        >
+                            Pedidos
                         </button>
                     </div>
                 </div>

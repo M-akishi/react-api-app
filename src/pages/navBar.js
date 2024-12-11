@@ -220,7 +220,7 @@ const NavBar = () => {
       );
     }
 
-    if (location.pathname === "/pedidos") {
+    if (location.pathname === "/pedidos" || /^\/pedidos\/\d+$/.test(location.pathname)) {
       return (<nav className="navbar bg-dark navbar-expand-lg border-bottom border-body" data-bs-theme="dark">
         <div className="container-fluid">
           <div className="navbar-brand">Restaurante</div>
@@ -263,11 +263,7 @@ const NavBar = () => {
                 </Link>
               </li>
             </ul>
-            <div className="ms-auto nav-item">
-              <Link to="/pedidos/nuevo" className="nav-link text-light">
-                Nuevo
-              </Link>
-            </div>
+            
           </div>
         </div>
       </nav>

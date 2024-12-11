@@ -1,23 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiService } from "./apiServices";
 import { Spinner } from "react-bootstrap";
 import platoimg from '../img/platos.svg'
 
 export const Pedidos = () => {
+    const { id } = useParams()
     const [pedidos, setPedidos] = useState([]);
     const [loading, setLoading] = useState(true); // Estado de carga inicial
     const [error, setError] = useState(null);
     const [selectedDate, setSelectedDate] = useState(
         new Date().toISOString().slice(0, 10)
     );
+    const [selectedMesa, setSelectedMesa] = useState(id || "")
     const navigate = useNavigate();
 
     useEffect(() => {
-        setLoading(true); // Comienza la carga al cambiar la fecha
+        setLoading(true);
+
+        const params = {
+            fecha: selectedDate,
+            boleta: "null"
+        };
+        if (selectedMesa && selectedMesa !== "") {
+            params.mesa_id = parseInt(selectedMesa);
+        }
+
         apiService
-            .getAll("pedidos", { fecha: selectedDate }) // Pasar la fecha como parámetro
+            .getAll("pedidos", params)
             .then((response) => {
+                console.log(response)
                 setPedidos(response.data);
                 setError(null);
             })
@@ -32,7 +44,7 @@ export const Pedidos = () => {
             .finally(() => {
                 setLoading(false); // Termina la carga
             });
-    }, [selectedDate]);
+    }, [selectedDate, selectedMesa]);
 
     if (error) {
         return (
@@ -116,13 +128,27 @@ export const Pedidos = () => {
         <div className="container-fluid">
             <h1>Lista de Pedidos</h1>
             <div>
-                <input
-                    type="date"
-                    className="form-control mb-4"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    style={{ maxWidth: "200px" }}
-                />
+                <div className="d-flex gap-2">
+                    <input
+                        type="date"
+                        className="form-control mb-4"
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        style={{ maxWidth: "200px" }}
+                    />
+                    <input
+                        type="number"
+                        className="form-control mb-4"
+                        value={selectedMesa}
+                        onChange={(e) => setSelectedMesa(e.target.value)}
+                        style={{ maxWidth: "200px" }}
+                    />
+                    <div className="ms-auto">
+                        <Link to={`/pedidos/nuevo/${selectedMesa}`} className="btn btn-warning">
+                            Nuevo
+                        </Link>
+                    </div>
+                </div>
                 {loading ? (
                     <div
                         className="d-flex justify-content-center align-items-center"
@@ -145,10 +171,11 @@ export const Pedidos = () => {
 };
 
 export const NewPedido = () => {
+    const { id } = useParams()
     const [pedido, setPedido] = useState({
         plato: '',
         cantidad: '',
-        mesa: ''
+        mesa: id
     })
 
     const navigate = useNavigate()
@@ -194,7 +221,7 @@ export const NewPedido = () => {
             .create("pedidos", pedido)
             .then(response => {
                 console.log(response)
-                navigate('/pedidos')
+                navigate(`/pedidos/${pedido.mesa}`)
             })
             .catch((error) => {
                 console.log(error)
@@ -301,7 +328,7 @@ export const ActualizarPedido = () => {
             .update("pedidos", id, pedidoData)
             .then(response => {
                 console.log(response)
-                navigate('/pedidos')
+                navigate(`/pedidos/${pedido.mesa}`)
             })
             .catch((error) => {
                 console.log(error)
@@ -310,7 +337,7 @@ export const ActualizarPedido = () => {
     };
 
     const handleCancel = () => {
-        navigate('/pedidos'); // Redirige a la página de productos sin realizar cambios
+        navigate(`/pedidos/${pedido.mesa}`); // Redirige a la página de productos sin realizar cambios
     };
 
 
@@ -359,7 +386,7 @@ export const ActualizarPedido = () => {
                 console.log(error)
             })
     }, [])
-    
+
     return (
         <div className="container">
             <h2>Agregar Nuevo Pedido</h2>
@@ -476,13 +503,14 @@ export const EliminarPedido = () => {
         }
     }, [id]);
 
+
     const confirmDelete = () => {
         if (id) {
             apiService
                 .delete("pedidos", id)
                 .then(response => {
                     console.log(response.data)
-                    navigate('/pedidos')
+                    navigate(`/pedidos/${pedido.mesa.id}`)
                 })
                 .catch((error) => {
                     console.log(error)
@@ -511,7 +539,7 @@ export const EliminarPedido = () => {
                 <button onClick={confirmDelete} className="btn btn-danger me-2">
                     Eliminar
                 </button>
-                <button onClick={() => navigate('/pedidos')} className="btn btn-secondary">
+                <button onClick={() => navigate(`/pedidos/${pedido.mesa.id}`)} className="btn btn-secondary">
                     Cancelar
                 </button>
             </div>
