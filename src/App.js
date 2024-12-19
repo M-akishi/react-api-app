@@ -6,7 +6,7 @@ import { Productos, NewProducto, ProductoActualizar, ProductoEliminar } from './
 import { Platos, NewPlato, PlatoActualizar, PlatoEliminar, PlatoIngredientes } from './pages/platos';
 import { Mesas, NewMesa, MesaActualizar, MesaEliminar } from './pages/mesas';
 import { Pedidos, NewPedido, ActualizarPedido, EliminarPedido } from './pages/pedidos';
-import { Boletas, NewBoleta } from './pages/boletas';
+import { Boletas, NewBoleta, ElminarBoleta } from './pages/boletas';
 import { MenuClientes } from './views/menu';
 import { Cocina } from './views/cocina';
 
@@ -31,12 +31,13 @@ function App() {
         <Route path='mesas/eliminar/:id' element={<MesaEliminar/>} />
         <Route path='pedidos/:id' element={<Pedidos/>} />
         <Route path='pedidos/' element={<Pedidos/>} />
+        <Route path='pedidos/nuevo' element={<NewPedido/>} />
         <Route path='pedidos/nuevo/:id' element={<NewPedido/>} />
         <Route path='pedidos/actualizar/:id' element={<ActualizarPedido/>} />
         <Route path='pedidos/eliminar/:id' element={<EliminarPedido/>} />
         <Route path='boletas' element={<Boletas/>} />
         <Route path='boletas/nuevo' element={<NewBoleta/>} /> 
-
+        <Route path='boletas/eliminar/:id' element={<ElminarBoleta/>} />
         <Route path='menu' element={<MenuClientes/>} /> 
         <Route path='cocina' element={<Cocina/>} />       
       </Routes>

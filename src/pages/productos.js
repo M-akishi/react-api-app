@@ -10,7 +10,6 @@ export const Productos = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Llamar a la API para obtener los productos
         apiService
             .getAll("productos")
             .then((response) => {

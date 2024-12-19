@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { apiService } from "./apiServices"
 import boletaImg from '../img/boleta.svg'
 import { Spinner } from "react-bootstrap"
@@ -364,4 +364,65 @@ export const NewBoleta = () => {
             )}
         </div>
     );
+}
+
+export const ElminarBoleta = () => {
+    const { id } = useParams();
+    const [boleta, setBoleta] = useState(null)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (id) {
+            apiService
+                .getOne("boletas", id)
+                .then(response => {
+                    setBoleta(response.data)
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+    }, [id]);
+
+    const confirmDelete = () => {
+        if (id) {
+            apiService
+                .delete("boletas", id)
+                .then(response => {
+                    console.log(response.data)
+                    navigate("/boletas")
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+    };
+
+    if (!boleta) {
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+                <Spinner animation="border" variant="primary" />
+            </div>
+        );
+    }
+
+    return (
+        <div className="container">
+            <h1>Eliminar Boleta</h1>
+            <div className="alert alert-warning">
+                <h4>¿Estás seguro de que deseas eliminar esta Boleta?</h4>
+                <p><strong>boleta:</strong> {boleta.id}</p>
+                <p><strong>Mesa:</strong> {boleta.mesa}</p>
+                <p><strong>Cantidad:</strong> ${boleta.total}</p>
+            </div>
+            <div className="d-flex">
+                <button onClick={confirmDelete} className="btn btn-danger me-2">
+                    Eliminar
+                </button>
+                <button onClick={() => navigate("/boletas")} className="btn btn-secondary">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    )
 }
